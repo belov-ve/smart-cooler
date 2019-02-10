@@ -71,7 +71,7 @@ elif argv[1] == "stop":
     GPIO.output(controlPin, GPIO.HIGH)
 
 # Перезапуск сервиса
-elif argv[1] == "restart":
+elif argv[1] == "reload":
     kill_proc(pid)
     sleep(1)
     set_pid()
