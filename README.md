@@ -9,7 +9,7 @@ Schematic_Smart-cooler.zip - electrical schematics
     # apt-get install python-rpi.gpio python3-rpi.gpio
     # chmod +x smcooler
     # cp smcooler /usr/bin/
-    # cp smcooler.service /etc/systemd/system/<br>
+    # cp smcooler.service /etc/systemd/system/
     # systemctl enable smcooler.service
 
 ### How to check the script and service after installation:<br>
