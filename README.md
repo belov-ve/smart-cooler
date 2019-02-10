@@ -1,9 +1,9 @@
 # smart-cooler
 smcooler system servis to control the fan on raspberry
 ---
-smcooler - python script
-smcooler.service - configuration file of service
-Schematic_Smart-cooler.zip - electrical schematics
+smcooler - python script<br>
+smcooler.service - configuration file of service<br>
+Schematic_Smart-cooler.zip - electrical schematics<br>
 
 ### How to install and activate the service:<br>
     # apt-get install python-rpi.gpio python3-rpi.gpio
