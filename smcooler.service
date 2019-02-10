@@ -5,7 +5,6 @@ Description=Smart cooler service
 Type=simple
 ExecStart=/usr/bin/smcooler start
 ExecStop=/usr/bin/smcooler stop
-ExecReload=/usr/bin/smcooler reload
 
 Restart=always
 PIDFile=/var/run/smcooler.pid
