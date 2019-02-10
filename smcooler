@@ -24,7 +24,7 @@ def kill_proc():
     pid = f.read()                              # прочитать pid процесса
     f.close
     if pid is not None:
-        os.kill(int(pid), signal.SIGKILL)       # or signal.SIGTERt
+        os.kill(int(pid), signal.SIGKILL)
 
 
 def set_gpio():
@@ -72,8 +72,8 @@ elif argv[1] == "stop":
 
 # Перезапуск сервиса
 elif argv[1] == "reload":
-    kill_proc(pid)
+    # kill_proc()
     sleep(1)
-    set_pid()
-    set_gpio()
-    cooler_control()
+    # set_pid()
+    # set_gpio()
+    # cooler_control()
