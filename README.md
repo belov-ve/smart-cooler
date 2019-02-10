@@ -1,7 +1,7 @@
 # smart-cooler
 smcooler system servis to control the fan on raspberry
 
-smcooler - python script
+smcooler - python script<br>
 smcooler.service - configuration file of service
 Schematic_Smart-cooler.zip - electrical schematics
 
