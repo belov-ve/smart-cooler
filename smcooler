@@ -1,0 +1,79 @@
+#!/usr/bin/python
+# coding=utf8
+
+import os
+import signal
+import RPi.GPIO as GPIO         # sudo apt-get install python-rpi.gpio python3-rpi.gpio
+from sys import argv
+from re import findall
+from time import sleep
+
+tempOn = 60                     # Температура включения кулера
+controlPin = 14                 # Пин управления кулера
+pidfile = "/var/run/smcooler.pid"
+
+
+def get_temp():
+    temp = os.popen("vcgencmd measure_temp").readline()
+    temp = float(findall('\d+\.\d+', temp)[0])
+    return(temp)
+
+
+def kill_proc():
+    f = open(pidfile)
+    pid = f.read()                              # прочитать pid процесса
+    f.close
+    if pid is not None:
+        os.kill(int(pid), signal.SIGKILL)       # or signal.SIGTERt
+
+
+def set_gpio():
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setwarnings(False)
+    GPIO.setup(controlPin, GPIO.OUT)
+    # GPIO.setup(controlPin, GPIO.OUT, initial=GPIO.HIGH)   # инициализация
+
+
+def set_pid():
+    f = open(pidfile,"w")
+    f.write(str(os.getpid()))
+    f.close
+
+
+def cooler_control():
+    while True:                                 # Цикл управлениея кулером
+        tmp = get_temp()
+        if tmp >= tempOn:
+            GPIO.output(controlPin, GPIO.HIGH)
+        elif tmp <= tempOn - 10:
+            GPIO.output(controlPin, GPIO.LOW)
+        sleep(2)
+
+#--------------------------------------------
+
+# Команда управления сервисом не указана. Выводим текущую температуру
+if len(argv) == 1:
+    while True:
+        print "Temp="+str(get_temp())+"'C"
+        sleep(1)
+
+# Старт сервиса
+elif argv[1] == "start":
+    set_pid()
+    set_gpio()
+    cooler_control()
+
+# Остановка сервиса
+elif argv[1] == "stop":
+    kill_proc()
+    sleep(1)
+    set_gpio()                                  # Останавливая сервис включаем вентилятор
+    GPIO.output(controlPin, GPIO.HIGH)
+
+# Перезапуск сервиса
+elif argv[1] == "restart":
+    kill_proc(pid)
+    sleep(1)
+    set_pid()
+    set_gpio()
+    cooler_control()

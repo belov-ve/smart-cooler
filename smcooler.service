@@ -1,0 +1,16 @@
+[Unit]
+Description=Smart cooler service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/smcooler start
+ExecStop=/usr/bin/smcooler stop
+ExecReload=/usr/bin/smcooler reload
+
+Restart=always
+PIDFile=/var/run/smcooler.pid
+OOMScoreAdjust=-200
+TimeoutSec=20
+
+[Install]
+WantedBy=multi-user.target
