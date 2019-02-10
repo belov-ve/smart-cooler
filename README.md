@@ -25,3 +25,4 @@ Service commands:
 How to get the temperature of the raspberry processor:
     # smcooler
     (to interrupt press CTRL + C)
+    
