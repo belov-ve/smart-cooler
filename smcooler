@@ -69,11 +69,3 @@ elif argv[1] == "stop":
     sleep(1)
     set_gpio()                                  # Останавливая сервис включаем вентилятор
     GPIO.output(controlPin, GPIO.HIGH)
-
-# Перезапуск сервиса
-elif argv[1] == "reload":
-    # kill_proc()
-    sleep(1)
-    # set_pid()
-    # set_gpio()
-    # cooler_control()
