@@ -19,8 +19,8 @@ Schematic_Smart-cooler.zip - electrical schematics<br>
 
 ### Service commands:<br>
     # systemctl start smcooler
-    # systemctl reload smcooler
     # systemctl stop smcooler
+    # systemctl restart smcooler
 
 ### How to get the temperature of the raspberry processor:<br>
     # smcooler
