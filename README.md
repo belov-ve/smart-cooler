@@ -1,9 +1,15 @@
 # smart-cooler
-smcooler system servis to control the fan on raspberry
+Smcooler system servis to control the fan on raspberry
 ---
 smcooler - python script<br>
 smcooler.service - configuration file of service<br>
 Schematic_Smart-cooler.zip - electrical schematics<br>
+
+### How to download the project:<br>
+    # cd existing_folder
+    # git init
+    # git remote add origin git://github.com/belov-ve/smart-cooler
+    # git pull origin master
 
 ### How to install and activate the service:<br>
     # apt-get install python-rpi.gpio python3-rpi.gpio
@@ -25,3 +31,4 @@ Schematic_Smart-cooler.zip - electrical schematics<br>
 ### How to get the temperature of the raspberry processor:<br>
     # smcooler
     (to interrupt press CTRL + C)
+    
