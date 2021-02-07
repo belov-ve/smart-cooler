@@ -14,7 +14,8 @@ Schematic_Smart-cooler.zip - electrical schematics<br>
 
 ### How to update the project and drop local changes:<br>
     # git status
-      Find the modified files. We transfer them or cancel the changes with the command (for example file smcooler):
+      Find the modified files. We transfer them or cancel the changes with the command
+      (for example file smcooler):
     # git checkout -- smcooler
     # git pull origin master
 
