@@ -8,9 +8,12 @@ from sys import argv
 from re import findall
 from time import sleep
 
-tempOn = 60                     # Температура включения кулера
+
+tempOn = 50                     # Температура включения кулера
+deltaOff = 10                   # Дельта отключения куллера
 controlPin = 14                 # Пин управления кулера
 pidfile = "/var/run/smcooler.pid"
+cont = true
 
 
 def get_temp():
@@ -45,14 +48,21 @@ def cooler_control():
         tmp = get_temp()
         if tmp >= tempOn:
             GPIO.output(controlPin, GPIO.HIGH)
-        elif tmp <= tempOn - 10:
+        elif tmp <= tempOn - deltaOff:
             GPIO.output(controlPin, GPIO.LOW)
         sleep(2)
+
+
+ def handler(signum, frame):
+    global cont
+    cont = False
+    return
 
 #--------------------------------------------
 
 # Команда управления сервисом не указана. Выводим текущую температуру
 if len(argv) == 1:
+    signal.signal(signal.SIGINT,handler)
     while True:
         print "Temp="+str(get_temp())+"'C"
         sleep(1)
