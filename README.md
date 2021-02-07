@@ -10,6 +10,13 @@ Schematic_Smart-cooler.zip - electrical schematics<br>
     # git init
     # git remote add origin git://github.com/belov-ve/smart-cooler
     # git pull origin master
+    
+
+### How to update the project and drop local changes:<br>
+    # git status
+      Find the modified files. We transfer them or cancel the changes with the command (for example file smcooler):
+    # git checkout -- smcooler
+    # git pull origin master
 
 ### How to install and activate the service:<br>
     # apt-get install python-rpi.gpio python3-rpi.gpio
