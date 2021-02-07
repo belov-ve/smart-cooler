@@ -13,7 +13,7 @@ tempOn = 50                     # Температура включения ку
 deltaOff = 10                   # Дельта отключения куллера
 controlPin = 14                 # Пин управления кулера
 pidfile = "/var/run/smcooler.pid"
-cont = true
+cont = True
 
 
 def get_temp():
@@ -53,7 +53,7 @@ def cooler_control():
         sleep(2)
 
 
- def handler(signum, frame):
+def handler(signum, frame):
     global cont
     cont = False
     return
@@ -63,7 +63,7 @@ def cooler_control():
 # Команда управления сервисом не указана. Выводим текущую температуру
 if len(argv) == 1:
     signal.signal(signal.SIGINT,handler)
-    while True:
+    while cont:
         print "Temp="+str(get_temp())+"'C"
         sleep(1)
 
