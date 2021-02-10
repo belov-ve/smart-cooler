@@ -10,7 +10,7 @@ from time import sleep
 
 
 tempOn = 50                     # Температура включения кулера
-deltaOff = 10                   # Дельта отключения куллера
+deltaOff = 10                   # Дельта отключения кулера
 controlPin = 14                 # Пин управления кулера
 pidfile = "/var/run/smcooler.pid"
 cont = True
