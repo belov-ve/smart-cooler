@@ -9,8 +9,8 @@ from re import findall
 from time import sleep
 
 
-tempOn = 55                     # Температура включения кулера
-deltaOff = 10                   # Дельта отключения кулера
+tempOn = 50                     # Температура включения кулера
+deltaOff = 5                    # Дельта отключения кулера
 controlPin = 14                 # Пин управления кулера
 
 pidfile = "/var/run/smcooler.pid"
