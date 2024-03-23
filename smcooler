@@ -65,7 +65,7 @@ def handler(signum, frame):
 if len(argv) == 1:
     signal.signal(signal.SIGINT,handler)
     while cont:
-        print "Temp="+str(get_temp())+"'C"
+        print("Temp="+str(get_temp())+"'C")
         sleep(1)
 
 # Старт сервиса
