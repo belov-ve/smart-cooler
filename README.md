@@ -6,9 +6,11 @@ smcooler.service - configuration file of service<br>
 Schematic_Smart-cooler.zip - electrical schematics<br>
 
 ### How to download the project:<br>
+    # git clone https://github.com/belov-ve/smart-cooler
+    or 
     # cd existing_folder
     # git init
-    # git remote add origin git://github.com/belov-ve/smart-cooler
+    # git remote add origin https://github.com/belov-ve/smart-cooler
     # git pull origin master
     
 
