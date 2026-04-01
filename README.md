@@ -1,5 +1,9 @@
-# smart-cooler
+# Smart-Cooler
 Smcooler system servis to control the fan on raspberry
+---
+
+For OS: *`Wheezy`, `Jessie`, `Stretch`, `Buster`, `Bullseye`*
+
 ---
 smcooler - python script<br>
 smcooler.service - configuration file of service<br>
