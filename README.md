@@ -2,7 +2,7 @@
 Smcooler system servis to control the fan on raspberry
 ---
 
-For OS: *`Wheezy`, `Jessie`, `Stretch`, `Buster`, `Bullseye`*
+### For OS: *`Stretch`, `Buster`, `Bullseye`*
 
 ---
 smcooler - python script<br>
