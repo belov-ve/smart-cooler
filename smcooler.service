@@ -7,7 +7,7 @@ ExecStart=/usr/bin/smcooler start
 ExecStop=/usr/bin/smcooler stop
 
 Restart=always
-PIDFile=/var/run/smcooler.pid
+PIDFile=/run/smcooler.pid
 OOMScoreAdjust=-200
 TimeoutSec=20
 
