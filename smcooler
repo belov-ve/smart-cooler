@@ -20,12 +20,7 @@ pidfile = "/run/smcooler.pid"
 cont = True
 
 def log(msg):
-    """Вывод в systemd journal с принудительным сбросом буфера"""
     print(f"smcooler: {msg}", flush=True)
-
-#def get_temp():
-#    out = os.popen("vcgencmd measure_temp").readline()
-#    return float(findall(r'\d+\.\d+', out)[0])
 
 def get_temp():
     out = subprocess.check_output(["vcgencmd", "measure_temp"], text=True)
