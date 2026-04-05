@@ -1,82 +1,100 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 # coding=utf8
 
 import os
 import signal
-import RPi.GPIO as GPIO         # sudo apt-get install python-rpi.gpio python3-rpi.gpio
-from sys import argv
+import sys
+import subprocess
 from re import findall
 from time import sleep
+from gpiozero import OutputDevice
 
+# ---------- НАСТРОЙКИ ----------
+tempOn = 54          # температура включения (°C)
+deltaOff = 4         # гистерезис (выключение при tempOn - deltaOff)
+controlPin = 14      # BCM номер пина
+activeHigh = True    # True = HIGH включает вентилятор, False = LOW включает
+# -----------------------------
 
-tempOn = 50                     # Температура включения кулера
-deltaOff = 5                    # Дельта отключения кулера
-controlPin = 14                 # Пин управления кулера
-
-pidfile = "/var/run/smcooler.pid"
+pidfile = "/run/smcooler.pid"
 cont = True
 
+def log(msg):
+    """Вывод в systemd journal с принудительным сбросом буфера"""
+    print(f"smcooler: {msg}", flush=True)
+
+#def get_temp():
+#    out = os.popen("vcgencmd measure_temp").readline()
+#    return float(findall(r'\d+\.\d+', out)[0])
 
 def get_temp():
-    temp = os.popen("vcgencmd measure_temp").readline()
-    temp = float(findall('\d+\.\d+', temp)[0])
-    return(temp)
-
+    out = subprocess.check_output(["vcgencmd", "measure_temp"], text=True)
+    return float(findall(r'\d+\.\d+', out)[0])
 
 def kill_proc():
-    f = open(pidfile)
-    pid = f.read()                              # прочитать pid процесса
-    f.close()
-    if pid is not None:
-        os.kill(int(pid), signal.SIGKILL)
-
-
-def set_gpio():
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setwarnings(False)
-    GPIO.setup(controlPin, GPIO.OUT)
-    # GPIO.setup(controlPin, GPIO.OUT, initial=GPIO.HIGH)   # инициализация
-
+    try:
+        with open(pidfile) as f:
+            pid = f.read().strip()
+        if pid:
+            os.kill(int(pid), signal.SIGKILL)
+            log(f"Killed process {pid}")
+    except Exception:
+        pass   # не логируем, если файла нет или процесс уже завершён
 
 def set_pid():
-    f = open(pidfile,"w")
-    f.write(str(os.getpid()))
-    f.close()
+    with open(pidfile, "w") as f:
+        f.write(str(os.getpid()))
+    log("start")
 
-
-def cooler_control():
-    while True:                                 # Цикл управлениея кулером
+def cooler_control(fan):
+    last_state = None   # 'on', 'off' или None
+    while True:
         tmp = get_temp()
         if tmp >= tempOn:
-            GPIO.output(controlPin, GPIO.HIGH)
+            new_state = 'on'
         elif tmp <= tempOn - deltaOff:
-            GPIO.output(controlPin, GPIO.LOW)
-        sleep(2)
+            new_state = 'off'
+        else:
+            new_state = last_state   # состояние не меняется
 
+        if new_state != last_state:
+            if new_state == 'on':
+                fan.on()
+                log(f"fan On (temp={tmp:.1f}°C)")
+            elif new_state == 'off':
+                fan.off()
+                log(f"fan Off (temp={tmp:.1f}°C)")
+            last_state = new_state
+        sleep(2)
 
 def handler(signum, frame):
     global cont
     cont = False
-    return
 
-#--------------------------------------------
-
-# Команда управления сервисом не указана. Выводим текущую температуру
-if len(argv) == 1:
-    signal.signal(signal.SIGINT,handler)
+# ---------- ОСНОВНАЯ ЛОГИКА ----------
+if len(sys.argv) == 1:
+    # Режим вывода температуры
+    signal.signal(signal.SIGINT, handler)
     while cont:
-        print("Temp="+str(get_temp())+"'C")
+        print(f"Temp={get_temp():.1f}°C")
         sleep(1)
 
-# Старт сервиса
-elif argv[1] == "start":
+elif sys.argv[1] == "start":
     set_pid()
-    set_gpio()
-    cooler_control()
+    fan = OutputDevice(controlPin, active_high=activeHigh, initial_value=False)
+    fan.off()
+    try:
+        cooler_control(fan)
+    except Exception as e:
+        log(f"Error: {e}")
 
-# Остановка сервиса
-elif argv[1] == "stop":
+elif sys.argv[1] == "stop":
     kill_proc()
     sleep(1)
-    set_gpio()                                  # Останавливая сервис включаем вентилятор
-    GPIO.output(controlPin, GPIO.HIGH)
+    level = "dh" if activeHigh else "dl"   # dh = HIGH, dl = LOW
+    try:
+        subprocess.run(["pinctrl", "set", str(controlPin), "op", level],
+                       check=True, capture_output=True)
+        log("stop (fan On)")
+    except Exception as e:
+        log(f"stop failed: {e}")
